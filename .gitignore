@@ -1,0 +1,10 @@
+node_modules
+.env
+
+# usuario y clave usuario mongo
+# backendbluu
+# AGDkgrEm14J2xBBR
+# mongodb+srv://<username>:<password>@cluster0.mksrd7w.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp
+
+
+# express mongo db vue
