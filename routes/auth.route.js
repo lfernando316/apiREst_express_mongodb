@@ -6,43 +6,17 @@ import {
   refreshToken,
   logout,
 } from "../controllers/auth.controller.js";
-import { body } from "express-validator";
-import { validationResultExpress } from "../middlewares/validationResultExpress.js";
 import { requireToken } from "../middlewares/requireToken.js";
+import {
+  bodyLoginValidator,
+  bodyRegisterValidator,
+} from "../middlewares/validatorManager.js";
+import { requireRefreshToken } from "../middlewares/requireRefreshToken.js";
+
 const router = Router();
 
-router.post(
-  "/register",
-  [
-    body("email", "formato de email incorrecto")
-      .trim()
-      .isEmail()
-      .normalizeEmail(),
-    body("password", "minimo 6 caracteres").trim().isLength({ min: 6 }),
-    body("password", "formato de password incorrecta").custom(
-      (value, { req }) => {
-        if (value !== req.body.repassword) {
-          throw new Error("no coinciden las contraseñas");
-        }
-        return value;
-      }
-    ),
-  ],
-  validationResultExpress,
-  register
-);
-router.post(
-  "/login",
-  [
-    body("email", "formato de email incorrecto")
-      .trim()
-      .isEmail()
-      .normalizeEmail(),
-    body("password", "minimo 6 caracteres").trim().isLength({ min: 6 }),
-  ],
-  validationResultExpress,
-  login
-);
+router.post("/register", bodyRegisterValidator, register);
+router.post("/login", bodyLoginValidator, login);
 // http://localhost:500/api/v1/auth/login
 // {
 //   "email": "lfernando316@hotmail.com",
@@ -53,7 +27,7 @@ router.post(
 router.get("/protected", requireToken, infoUser);
 // http://localhost:500/api/v1/auth/protected
 
-router.get("/refresh", refreshToken);
+router.get("/refresh", requireRefreshToken, refreshToken);
 
 router.get("/logout", logout);
 

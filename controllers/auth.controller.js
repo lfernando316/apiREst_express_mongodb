@@ -1,5 +1,4 @@
 import { User } from "../models/User.js";
-import jwt from "jsonwebtoken";
 import { generateRefreshToken, generateToken } from "../utils/tokenManager.js";
 
 export const register = async (req, res) => {
@@ -8,9 +7,11 @@ export const register = async (req, res) => {
     const user = new User({ email, password });
     await user.save();
 
-    //jwt token
+    // Generar el token JWT
+    const { token, expiresIn } = generateToken(user.id);
+    generateRefreshToken(user.id, res);
 
-    return res.status(201).json({ ok: true });
+    return res.status(201).json({ token, expiresIn });
   } catch (error) {
     console.log(error);
     if (error.code === 11000) {
@@ -61,21 +62,11 @@ export const infoUser = async (req, res) => {
 
 export const refreshToken = (req, res) => {
   try {
-    const refreshTokenCookie = req.cookies.refreshToken;
-    if (!token) throw new Error("no existe el token");
-
-    const { uid } = jwt.verify(refreshTokenCookie, process.env.JWT_REFRESH);
-    const { token, expiresIn } = generateToken(uid);
-
+    const { token, expiresIn } = generateToken(req.uid);
     return res.json({ token, expiresIn });
   } catch (error) {
     console.log(error);
-    const TokenVerificationErrors = {
-      "invalid signature": "la firma del jwt no es valida",
-    };
-    return res
-      .status(401)
-      .send({ error: TokenVerificationErrors[error.message] });
+    return res.status(500).json({ error: "Error de servidor" });
   }
 };
 
