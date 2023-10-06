@@ -54,8 +54,8 @@ export const getLinkCRUDV1 = async (req, res) => {
 
 export const createLink = async (req, res) => {
   try {
-    let { longLink } = req.body;
     console.log("holaaa");
+    let { longLink } = req.body;
     if (!longLink.startsWith("https://")) {
       longLink = "https://" + longLink;
     }
