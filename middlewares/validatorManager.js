@@ -36,7 +36,9 @@ export const bodyRegisterValidator = [
     .trim()
     .isEmail()
     .normalizeEmail(),
-  body("password", "minimo 6 caracteres").trim().isLength({ min: 6 }),
+  body("password", "contraseña minimo 6 caracteres")
+    .trim()
+    .isLength({ min: 6 }),
   body("password", "formato de password incorrecta").custom(
     (value, { req }) => {
       if (value !== req.body.repassword) {
