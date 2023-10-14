@@ -31,7 +31,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email }).maxTimeMS(15000);
     if (!user) return res.status(403).json({ error: "no existe este usuario" });
 
     const respuestaPassword = await user.comparePassword(password);
