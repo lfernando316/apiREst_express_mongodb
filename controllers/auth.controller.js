@@ -21,7 +21,7 @@ export const register = async (req, res) => {
   }
 };
 
-// http://localhost:500/api/v1/auth/register
+// http://localhost:5000/api/v1/auth/register
 // {
 //     "email": "lfernando316@hotmail.com",
 //     "password": "123123",
